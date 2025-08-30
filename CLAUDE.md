@@ -35,6 +35,9 @@ nano-banana-app/
 │   │       └── localStorage.ts                # LocalStorage utilities for persistence
 │   └── types/
 │       └── image.ts                           # TypeScript interfaces for image data
+├── tests/
+│   ├── testing-assets/                        # Test images and files for API testing
+│   │   └── formula-1.png                      # Example test image
 ├── public/                                    # Static assets
 ├── next.config.ts                             # Next.js configuration
 └── package.json                               # Dependencies and scripts
@@ -128,6 +131,69 @@ npm run dev          # Start development server with Turbopack
 npm run build        # Build for production with Turbopack
 npm run start        # Start production server
 npm run lint         # Run ESLint
+```
+
+## 🧪 Testing Framework
+
+### Test Structure
+We use **Node.js ES Modules** (.mjs) for API testing with the following setup:
+
+```
+tests/
+├── testing-assets/          # Test images and files for API testing
+│   └── formula-1.png        # Example test image for API validation
+├── test-api-integration.mjs # End-to-end API integration test
+└── test-fal-connection.mjs  # Fal AI connection and service test
+```
+
+### Running Tests
+
+```bash
+# Test Fal AI connection (requires FAL_KEY in .env.local)
+node tests/test-fal-connection.mjs
+
+# Test full API integration (requires dev server running)
+npm run dev &                              # Start dev server first
+node tests/test-api-integration.mjs        # Run integration test
+```
+
+### Test Types
+
+1. **Fal AI Connection Test** (`test-fal-connection.mjs`)
+   - Tests direct Fal AI API connectivity
+   - Validates FAL_KEY configuration
+   - Uses public test image for processing
+   - Example: `"make the sky more blue and vibrant"` prompt
+
+2. **End-to-End Integration Test** (`test-api-integration.mjs`)
+   - Tests complete application flow
+   - Validates `/api/image-edit` endpoint
+   - Tests server connectivity and response structure
+   - Uses programmatic test image creation
+
+### Testing Assets
+- Store test images in `tests/testing-assets/`
+- Use `formula-1.png` or add custom test images
+- Support all image formats: PNG, JPG, JPEG, GIF, WebP, BMP, TIFF
+
+### Test Implementation Example
+```javascript
+// Basic test structure following our pattern:
+import { fal } from '@fal-ai/client';
+import { config } from 'dotenv';
+
+config({ path: '.env.local' });
+fal.config({ credentials: process.env.FAL_KEY });
+
+const result = await fal.subscribe("fal-ai/nano-banana/edit", {
+  input: {
+    prompt: "your editing instruction",
+    image_urls: ["path/to/test/image"],
+    num_images: 1,
+    output_format: "jpeg"
+  },
+  logs: true
+});
 ```
 
 ### Core Capabilities
