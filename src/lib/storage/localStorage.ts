@@ -10,11 +10,14 @@ export const storageUtils = {
         id: image.id,
         originalUrl: image.originalUrl,
         editedUrl: image.editedUrl,
+        editedUrls: image.editedUrls || [],
         prompt: image.prompt,
         createdAt: image.createdAt.toISOString(),
         fileName: image.originalFile.name,
         fileSize: image.originalFile.size,
-        isProcessing: image.isProcessing
+        isProcessing: image.isProcessing,
+        description: image.description,
+        requestId: image.requestId
       };
       
       const updatedImages = [imageData, ...storedImages.filter(img => img.id !== image.id)];
@@ -48,6 +51,12 @@ export const storageUtils = {
       if (imageToRemove?.editedUrl?.startsWith('blob:')) {
         URL.revokeObjectURL(imageToRemove.editedUrl);
       }
+      // Clean up multiple edited URLs
+      imageToRemove?.editedUrls?.forEach(url => {
+        if (url?.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
     } catch (error) {
       console.error('Failed to remove image from localStorage:', error);
     }
@@ -76,6 +85,12 @@ export const storageUtils = {
         if (img.editedUrl?.startsWith('blob:')) {
           URL.revokeObjectURL(img.editedUrl);
         }
+        // Clean up multiple edited URLs
+        img.editedUrls?.forEach(url => {
+          if (url?.startsWith('blob:')) {
+            URL.revokeObjectURL(url);
+          }
+        });
       });
       
       localStorage.removeItem(STORAGE_KEY);
