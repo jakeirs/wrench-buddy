@@ -22,22 +22,27 @@ SITE_URL=http://localhost:3000  # Optional
 nano-banana-app/
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx                           # Main portal page with 3 navigation tiles
+│   │   ├── page.tsx                           # Main portal page with 4 navigation tiles
 │   │   ├── editor/
 │   │   │   └── page.tsx                       # Fal AI editor page with dropzone & prompt
 │   │   ├── editor-openrouter/
 │   │   │   └── page.tsx                       # OpenRouter chat page with image analysis
+│   │   ├── editor-mixer/
+│   │   │   └── page.tsx                       # Multi-image editor with model selection
 │   │   ├── library/
 │   │   │   └── page.tsx                       # Library page with image grid
 │   │   └── api/
 │   │       ├── image-edit/
 │   │       │   └── route.ts                   # Fal AI image editing API endpoint
-│   │       └── openrouter-edit/
-│   │           └── route.ts                   # OpenRouter image chat API endpoint
+│   │       ├── openrouter-edit/
+│   │       │   └── route.ts                   # OpenRouter image chat API endpoint
+│   │       └── mixer-edit/
+│   │           └── route.ts                   # Unified multi-image API for both providers
 │   ├── components/
 │   │   ├── ui/                                # shadcn/ui components (button, card, textarea, dialog)
 │   │   └── modules/                           # Custom components
 │   │       ├── image-dropzone.tsx             # File upload dropzone with preview
+│   │       ├── image-many-dropzone.tsx        # Multi-image dropzone (up to 5 images)
 │   │       ├── library-grid.tsx               # Responsive image grid layout
 │   │       └── image-card.tsx                 # Individual image card with metadata
 │   ├── lib/
@@ -54,7 +59,8 @@ nano-banana-app/
 │   ├── test-api-integration.mjs               # Fal AI end-to-end integration test  
 │   ├── test-fal-connection.mjs                # Fal AI direct connection test
 │   ├── test-openrouter-connection.mjs         # OpenRouter direct connection test
-│   └── test-openrouter-integration.mjs        # OpenRouter end-to-end integration test
+│   ├── test-openrouter-integration.mjs        # OpenRouter end-to-end integration test
+│   └── test-mixer-integration.mjs             # Editor Mixer comprehensive integration test
 ├── public/                                    # Static assets
 ├── next.config.ts                             # Next.js configuration
 └── package.json                               # Dependencies and scripts (includes openai SDK)
@@ -63,9 +69,10 @@ nano-banana-app/
 ## 🚀 COMPLETED FEATURES
 
 ### 📺 **Application Pages**
-- **Portal**: Landing page with 3 navigation tiles (Editor, Editor OpenRouter, Library)  
+- **Portal**: Landing page with 4 navigation tiles (Editor, Editor OpenRouter, Editor Mixer, Library)  
 - **Fal AI Editor**: Image upload + editing with drag & drop
 - **OpenRouter Editor**: Chat interface with image analysis and generation
+- **Editor Mixer**: Multi-image processing (up to 5 images) with model selection
 - **Library**: Grid view of edited images with metadata management
 
 ### 🎨 **UI/UX**
@@ -76,6 +83,8 @@ nano-banana-app/
 
 ### 🔧 **Core Technical Features**
 - **State Management**: Zustand store with LocalStorage persistence
+- **Multi-Image Processing**: Up to 5 images simultaneously with unified API
+- **Model Selection**: Dynamic switching between FAL AI and OpenRouter models
 - **Image Display**: Generated images from OpenRouter (base64/data URI support)
 - **Error Handling**: Comprehensive error system with retry functionality
 - **Memory Management**: Proper blob URL cleanup

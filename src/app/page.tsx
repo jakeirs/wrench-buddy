@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Library, Zap } from "lucide-react";
+import { Edit, Library, Zap, Shuffle } from "lucide-react";
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl w-full">
           <Link href="/editor">
             <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
               <CardHeader className="text-center pb-6">
@@ -53,6 +53,25 @@ export default function Home() {
               <CardContent>
                 <Button className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white">
                   Chat with AI
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/editor-mixer">
+            <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
+              <CardHeader className="text-center pb-6">
+                <div className="mx-auto mb-4 p-4 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-600 transition-colors">
+                  <Shuffle size={48} className="text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold">Editor Mixer</CardTitle>
+                <CardDescription className="text-white/80 text-lg">
+                  Process multiple images with different AI models
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white">
+                  Mix & Process
                 </Button>
               </CardContent>
             </Card>
