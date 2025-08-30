@@ -1,26 +1,39 @@
 # Image Editor with AI Chat
 
 ## 🎯 Project Overview
-**Next.js 15** application to Edit Editor with AI Chat, using Gemini API 
+**Next.js 15** application with AI-powered image editing using Fal AI and OpenRouter APIs
 
 ## 🛠 Tech Stack
 - **Framework**: Next.js 15 + App Router + TypeScript
-- **UI**: Tailwind CSS + shadcn/ui + Lucide React icons + Next.js Image optimization
-- **State Management**: Zustand for global state management
-- **Memory**: LocalStorage for image persistence and metadata
-- **File Handling**: react-dropzone for drag & drop functionality
-- **Date Formatting**: date-fns for relative date display
+- **UI**: Tailwind CSS + shadcn/ui + Lucide React icons
+- **State Management**: Zustand + LocalStorage persistence
+- **File Handling**: react-dropzone with drag & drop
+- **AI APIs**: Fal AI (`@fal-ai/client`) + OpenRouter (`openai` SDK)
 
-## 📁 Current Project Structure
+## 🔐 Environment Variables
+```bash
+FAL_KEY=your_fal_ai_api_key_here
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+SITE_URL=http://localhost:3000  # Optional
+```
+
+## 📁 Project Structure
 ```
 nano-banana-app/
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx                           # Main portal page with navigation tiles
+│   │   ├── page.tsx                           # Main portal page with 3 navigation tiles
 │   │   ├── editor/
-│   │   │   └── page.tsx                       # Image editor page with dropzone & prompt
-│   │   └── library/
-│   │       └── page.tsx                       # Library page with image grid
+│   │   │   └── page.tsx                       # Fal AI editor page with dropzone & prompt
+│   │   ├── editor-openrouter/
+│   │   │   └── page.tsx                       # OpenRouter chat page with image analysis
+│   │   ├── library/
+│   │   │   └── page.tsx                       # Library page with image grid
+│   │   └── api/
+│   │       ├── image-edit/
+│   │       │   └── route.ts                   # Fal AI image editing API endpoint
+│   │       └── openrouter-edit/
+│   │           └── route.ts                   # OpenRouter image chat API endpoint
 │   ├── components/
 │   │   ├── ui/                                # shadcn/ui components (button, card, textarea, dialog)
 │   │   └── modules/                           # Custom components
@@ -37,176 +50,100 @@ nano-banana-app/
 │       └── image.ts                           # TypeScript interfaces for image data
 ├── tests/
 │   ├── testing-assets/                        # Test images and files for API testing
-│   │   └── formula-1.png                      # Example test image
+│   │   └── formula-1.png                      # Example test image for OpenRouter/Fal testing
+│   ├── test-api-integration.mjs               # Fal AI end-to-end integration test  
+│   ├── test-fal-connection.mjs                # Fal AI direct connection test
+│   ├── test-openrouter-connection.mjs         # OpenRouter direct connection test
+│   └── test-openrouter-integration.mjs        # OpenRouter end-to-end integration test
 ├── public/                                    # Static assets
 ├── next.config.ts                             # Next.js configuration
-└── package.json                               # Dependencies and scripts
+└── package.json                               # Dependencies and scripts (includes openai SDK)
 ```
 
-## 🚀 COMPLETED FEATURES (100% FUNCTIONAL)
+## 🚀 COMPLETED FEATURES
 
 ### 📺 **Application Pages**
-- **Portal Page**: Beautiful gradient landing page with navigation tiles to Editor and Library
-- **Editor Page**: Image upload interface with drag & drop functionality and AI prompt input
-- **Library Page**: Grid view of all edited images with metadata and management features
+- **Portal**: Landing page with 3 navigation tiles (Editor, Editor OpenRouter, Library)  
+- **Fal AI Editor**: Image upload + editing with drag & drop
+- **OpenRouter Editor**: Chat interface with image analysis and generation
+- **Library**: Grid view of edited images with metadata management
 
-### 🎨 **UI/UX Features**
-- **Gradient Backgrounds**: Purple/pink/blue gradients across all pages for cohesive design
-- **Responsive Design**: Mobile-first approach with proper breakpoints (1-5 columns grid)
-- **Interactive Elements**: Hover effects, animations, and smooth transitions
-- **File Upload**: Drag & drop with visual feedback and file type validation
-- **Image Preview**: Large preview replacing dropzone after upload
-- **Glass Morphism**: Backdrop blur effects with semi-transparent backgrounds
+### 🎨 **UI/UX**
+- **Responsive Design**: Mobile-first (1-5 column grid)
+- **Glass Morphism**: Gradient backgrounds with backdrop blur
+- **File Upload**: Drag & drop with validation (PNG, JPG, GIF, WebP, BMP, TIFF, max 10MB)
+- **Interactive Elements**: Hover effects, loading states, smooth transitions
 
-### 🖼️ **Image Management**
-- **Upload System**: Support for PNG, JPG, JPEG, GIF, WebP, BMP, TIFF (max 10MB)
-- **Storage**: LocalStorage persistence with blob URL management
-- **Metadata Display**: File name, size, creation date with relative formatting
-- **Delete Functionality**: Hover overlay delete button with confirmation
-- **Grid Layout**: YouTube-style thumbnail cards in responsive grid
+### 🔧 **Core Technical Features**
+- **State Management**: Zustand store with LocalStorage persistence
+- **Image Display**: Generated images from OpenRouter (base64/data URI support)
+- **Error Handling**: Comprehensive error system with retry functionality
+- **Memory Management**: Proper blob URL cleanup
+- **Type Safety**: Full TypeScript implementation
 
-## 🔧 KEY TECHNICAL ACHIEVEMENTS
+## 🛡️ **Enhanced Error Handling**
 
-### State Management (Zustand)
-```typescript
-interface ImageStore {
-  currentImage: EditedImage | null;
-  editedImages: EditedImage[];
-  setCurrentImage: (image: EditedImage | null) => void;
-  addEditedImage: (image: EditedImage) => void;
-  removeEditedImage: (id: string) => void;
-  updateImage: (id: string, updates: Partial<EditedImage>) => void;
-}
-```
+### Finish Reason Detection
+- ✅ **Content Filter Detection**: `finish_reason: "content_filter"` → "Content Prohibited" 
+- ✅ **Length Limits**: `finish_reason: "length"` → "Response Too Long"
+- ✅ **Model Issues**: Other finish reasons → Categorized errors
+- ✅ **Success Detection**: `finish_reason: "stop"` → Normal processing
 
-### LocalStorage Structure
-```typescript
-interface StoredImageData {
-  id: string;
-  originalUrl: string;        # Blob URL for uploaded image
-  editedUrl: string | null;   # Will store edited image URL from API
-  prompt: string;             # User's editing prompt
-  createdAt: string;          # ISO date string
-  fileName: string;           # Original file name
-  fileSize: number;           # File size in bytes
-  isProcessing: boolean;      # Processing state for future API integration
-}
-```
+### Error Types & UI
+- **Authentication** (Yellow): API key issues
+- **Rate Limit** (Blue): Too many requests  
+- **Network** (Orange): Connection problems
+- **Content Filter** (Purple): Policy violations (non-retryable)
+- **Length Limit** (Indigo): Response truncated
+- **Model Issues** (Pink): AI processing errors
 
-### Error Handling System
-- Image loading fallbacks with error states
-- Blob URL cleanup to prevent memory leaks
-- File validation with user-friendly messages
-- LocalStorage error handling with console logging
+### Error Features
+- **Smart Retry**: Only for recoverable errors
+- **Expandable Details**: Technical info with error codes
+- **Context Help**: Specific guidance per error type
+- **Graceful Degradation**: UI stays functional after errors
 
-## 🔄 Data Flow
+## 🧪 **Development & Testing**
 
-1. **Image Upload**: User drops/selects file → Dropzone creates blob URL → Store in Zustand + LocalStorage
-2. **Editor Flow**: Upload → Preview → Prompt Input → Edit Button (ready for API integration)
-3. **Library Flow**: Load from LocalStorage → Display in grid → Allow deletion → Update storage
-4. **Navigation**: Portal → Editor/Library with back navigation and proper routing
-
-## 🎯 User Experience
-
-### Navigation
-- **Portal Entry**: Clean landing page with clear call-to-action tiles
-- **Breadcrumb Navigation**: Back to home links on all pages
-- **Visual Feedback**: Loading states, hover effects, and smooth transitions
-
-### Image Interaction
-- **Drag & Drop**: Visual feedback with border changes and hover states
-- **Metadata Display**: Collapsible prompts (first 5-7 words + expand)
-- **Relative Dates**: "4 minutes ago", "2 hours ago" using date-fns
-- **File Management**: Easy deletion with confirmation dialogs
-
-### Responsive Design
-- **Mobile**: Single column grid, touch-friendly interactions
-- **Tablet**: 2-3 column grid with optimized spacing
-- **Desktop**: 4-5 column grid with hover effects
-
-## 🧪 Development Commands
-
+### Commands
 ```bash
 npm run dev          # Start development server with Turbopack
-npm run build        # Build for production with Turbopack
-npm run start        # Start production server
+npm run build        # Build for production
 npm run lint         # Run ESLint
 ```
 
-## 🧪 Testing Framework
-
-### Test Structure
-We use **Node.js ES Modules** (.mjs) for API testing with the following setup:
-
-```
-tests/
-├── testing-assets/          # Test images and files for API testing
-│   └── formula-1.png        # Example test image for API validation
-├── test-api-integration.mjs # End-to-end API integration test
-└── test-fal-connection.mjs  # Fal AI connection and service test
-```
-
-### Running Tests
-
+### API Testing (.mjs files)
 ```bash
-# Test Fal AI connection (requires FAL_KEY in .env.local)
-node tests/test-fal-connection.mjs
-
-# Test full API integration (requires dev server running)
-npm run dev &                              # Start dev server first
-node tests/test-api-integration.mjs        # Run integration test
+node tests/test-fal-connection.mjs           # Test Fal AI
+node tests/test-openrouter-connection.mjs    # Test OpenRouter
+node tests/test-api-integration.mjs          # Full integration tests
 ```
 
-### Test Types
+## 🤖 **AI Integration**
 
-1. **Fal AI Connection Test** (`test-fal-connection.mjs`)
-   - Tests direct Fal AI API connectivity
-   - Validates FAL_KEY configuration
-   - Uses public test image for processing
-   - Example: `"make the sky more blue and vibrant"` prompt
+### Fal AI (Image Editing)
+- **Endpoint**: `/api/image-edit` 
+- **Model**: `fal-ai/nano-banana/edit`
+- **Purpose**: Direct image transformation
+- **Output**: Edited image file (URL)
 
-2. **End-to-End Integration Test** (`test-api-integration.mjs`)
-   - Tests complete application flow
-   - Validates `/api/image-edit` endpoint
-   - Tests server connectivity and response structure
-   - Uses programmatic test image creation
+### OpenRouter (Chat & Generation)  
+- **Endpoint**: `/api/openrouter-edit`
+- **Model**: `google/gemini-2.5-flash-image-preview:free`
+- **Purpose**: Image analysis, chat, and generation
+- **Output**: Text response + generated images (base64)
+- **Features**: Supports both image analysis AND image generation
 
-### Testing Assets
-- Store test images in `tests/testing-assets/`
-- Use `formula-1.png` or add custom test images
-- Support all image formats: PNG, JPG, JPEG, GIF, WebP, BMP, TIFF
+### Key Technical Achievements
+- **Image Generation Display**: Properly extracts and displays generated images from OpenRouter
+- **Finish Reason Handling**: Content filter detection with user-friendly messages  
+- **Comprehensive Logging**: Essential console.log statements for API debugging
+- **Error Recovery**: Retry mechanisms with appropriate UX
+- **Type Safety**: Proper TypeScript interfaces replacing `any` types
+- **Hydration Fix**: Suppressed browser extension conflicts
 
-### Test Implementation Example
-```javascript
-// Basic test structure following our pattern:
-import { fal } from '@fal-ai/client';
-import { config } from 'dotenv';
-
-config({ path: '.env.local' });
-fal.config({ credentials: process.env.FAL_KEY });
-
-const result = await fal.subscribe("fal-ai/nano-banana/edit", {
-  input: {
-    prompt: "your editing instruction",
-    image_urls: ["path/to/test/image"],
-    num_images: 1,
-    output_format: "jpeg"
-  },
-  logs: true
-});
-```
-
-### Core Capabilities
-- ✅ **Frontend Complete**: Full UI/UX implementation ready for backend integration
-- ✅ **State Management**: Zustand store handling all image operations
-- ✅ **Data Persistence**: LocalStorage with proper cleanup and error handling
-- ✅ **Responsive Design**: Mobile-first approach with all breakpoints covered
-- ✅ **File Handling**: Robust upload system with validation and preview
-- 🔄 **API Ready**: Editor page prepared for Gemini API integration
-
-### Technical Excellence  
-- **Type Safety**: Full TypeScript implementation with proper interfaces
-- **Performance**: Next.js 15 with Turbopack for fast development and builds
-- **Accessibility**: Proper ARIA labels, keyboard navigation, and semantic HTML
-- **Code Organization**: Clean separation of concerns with modular architecture
-- **Memory Management**: Proper blob URL cleanup to prevent memory leaks  
+## 🔄 **Data Flow**
+1. **Upload** → Dropzone → Blob URL → Zustand + LocalStorage
+2. **Process** → API call → Error handling → Display results/images
+3. **Display** → Generated images + text responses with proper error states
+4. **Persist** → LocalStorage management with cleanup

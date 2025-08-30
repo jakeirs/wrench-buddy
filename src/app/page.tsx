@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Library } from "lucide-react";
+import { Edit, Library, Zap } from "lucide-react";
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full">
           <Link href="/editor">
             <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
               <CardHeader className="text-center pb-6">
@@ -28,12 +28,31 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-2xl font-bold">Editor</CardTitle>
                 <CardDescription className="text-white/80 text-lg">
-                  Upload and edit images with AI prompts
+                  Upload and edit images with Fal AI
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white">
                   Start Editing
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/editor-openrouter">
+            <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
+              <CardHeader className="text-center pb-6">
+                <div className="mx-auto mb-4 p-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:from-yellow-500 group-hover:to-orange-600 transition-colors">
+                  <Zap size={48} className="text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold">Editor OpenRouter (Free)</CardTitle>
+                <CardDescription className="text-white/80 text-lg">
+                  Chat with AI about your images for free
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white">
+                  Chat with AI
                 </Button>
               </CardContent>
             </Card>
