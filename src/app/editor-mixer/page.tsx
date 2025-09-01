@@ -196,7 +196,7 @@ export default function EditorMixerPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-white hover:text-white/80 transition-colors">
+          <Link href="/" className="inline-flex items-center gap-2 text-white hover:text-white/80 transition-colors" suppressHydrationWarning={true}>
             <ArrowLeft size={20} />
             Back to Home
           </Link>
@@ -435,15 +435,15 @@ export default function EditorMixerPage() {
                   {responseDetails?.hasImages && responseDetails.images && (
                     <div className="space-y-4">
                       <h4 className="text-xl font-semibold text-white">Generated/Edited Images</h4>
-                      <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-4">
                         {responseDetails.images.map((image, index) => (
-                          <div key={index} className="bg-white/5 rounded-lg p-4 space-y-3">
+                          <div key={index} className="space-y-3">
                             {image.url && (
-                              <div className="relative rounded-lg overflow-hidden">
+                              <div className="relative rounded-lg overflow-hidden bg-white/5">
                                 <img 
                                   src={image.url} 
                                   alt={`Generated image ${index + 1}`}
-                                  className="w-full h-auto max-h-96 object-contain bg-black/20"
+                                  className="w-full h-auto max-h-[600px] object-contain bg-black/20"
                                   onError={(e) => {
                                     console.error('Image load error:', e);
                                     console.log('Image URL:', image.url);
@@ -452,11 +452,11 @@ export default function EditorMixerPage() {
                               </div>
                             )}
                             {image.b64_json && (
-                              <div className="relative rounded-lg overflow-hidden">
+                              <div className="relative rounded-lg overflow-hidden bg-white/5">
                                 <img 
                                   src={`data:image/png;base64,${image.b64_json}`} 
                                   alt={`Generated image ${index + 1}`}
-                                  className="w-full h-auto max-h-96 object-contain bg-black/20"
+                                  className="w-full h-auto max-h-[600px] object-contain bg-black/20"
                                   onError={(e) => {
                                     console.error('Base64 image load error:', e);
                                     console.log('Base64 length:', image.b64_json?.length);
@@ -465,8 +465,10 @@ export default function EditorMixerPage() {
                               </div>
                             )}
                             {image.revised_prompt && (
-                              <div className="text-sm text-white/70">
-                                <span className="font-medium">Revised prompt:</span> {image.revised_prompt}
+                              <div className="bg-white/5 rounded-lg p-4">
+                                <div className="text-sm text-white/70">
+                                  <span className="font-medium">Revised prompt:</span> {image.revised_prompt}
+                                </div>
                               </div>
                             )}
                           </div>
