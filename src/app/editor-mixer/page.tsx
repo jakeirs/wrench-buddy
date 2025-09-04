@@ -280,6 +280,18 @@ export default function EditorMixerPage() {
                     className="min-h-32 text-lg bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-white/50 resize-none"
                     rows={4}
                   />
+                  <div className="flex justify-between items-center mt-2">
+                    <div className="text-sm text-white/60">
+                      Max 5000 characters
+                    </div>
+                    <div className={`text-sm font-medium ${
+                      prompt.length > 5000 
+                        ? 'text-red-400' 
+                        : 'text-white/60'
+                    }`}>
+                      {prompt.length}/5000
+                    </div>
+                  </div>
                 </div>
 
                 <Button 
