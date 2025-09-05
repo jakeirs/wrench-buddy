@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/D:\\CODE\\TOOLS\\nano-banana-app\\src\\app\\api\\mixer-edit/**)",
+      "WebFetch(domain:fal.ai)",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
