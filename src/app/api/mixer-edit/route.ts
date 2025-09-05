@@ -119,16 +119,82 @@ async function handleFalRequest(files: File[], prompt: string): Promise<MixerRes
   } catch (error) {
     console.error('FAL AI error:', error);
     
+    // Enhanced error logging for FAL AI errors
+    if (error && typeof error === 'object') {
+      const falError = error as any;
+      console.error('FAL AI detailed error info:', {
+        name: falError.name,
+        message: falError.message,
+        status: falError.status,
+        body: falError.body,
+        stack: falError.stack
+      });
+      
+      // Log the full error body if it exists (contains validation details)
+      if (falError.body) {
+        console.error('FAL AI error body details:', JSON.stringify(falError.body, null, 2));
+      }
+    }
+    
+    // Determine error type and details based on FAL error
+    let errorType = 'model';
+    let errorTitle = 'FAL AI Error';
+    let errorMessage = 'Failed to process images with FAL AI';
+    let errorDetails = error instanceof Error ? error.message : 'Unknown FAL AI error';
+    let errorCode = 'FAL_ERROR';
+    let httpStatus = 500;
+    let retryable = true;
+    
+    if (error && typeof error === 'object') {
+      const falError = error as any;
+      
+      if (falError.status === 422) {
+        errorType = 'validation';
+        errorTitle = 'FAL AI Validation Error';
+        errorMessage = 'Invalid request parameters for FAL AI';
+        errorCode = 'FAL_VALIDATION_ERROR';
+        httpStatus = 422;
+        retryable = false;
+        
+        // Extract validation details from body
+        if (falError.body && typeof falError.body === 'object') {
+          if (falError.body.message) {
+            errorMessage = falError.body.message;
+            errorDetails = falError.body.message;
+          }
+          if (falError.body.detail) {
+            errorDetails = Array.isArray(falError.body.detail) 
+              ? falError.body.detail.map((d: any) => `${d.loc?.join('.')} - ${d.msg}`).join(', ')
+              : falError.body.detail;
+          }
+        }
+      } else if (falError.status === 401) {
+        errorType = 'authentication';
+        errorTitle = 'FAL AI Authentication Error';
+        errorMessage = 'Invalid FAL AI API key';
+        errorCode = 'FAL_AUTH_ERROR';
+        httpStatus = 401;
+        retryable = false;
+      } else if (falError.status === 429) {
+        errorType = 'rate_limit';
+        errorTitle = 'FAL AI Rate Limit';
+        errorMessage = 'FAL AI rate limit exceeded';
+        errorCode = 'FAL_RATE_LIMIT';
+        httpStatus = 429;
+        retryable = true;
+      }
+    }
+    
     return {
       success: false,
       error: {
-        type: 'model',
-        title: 'FAL AI Error',
-        message: 'Failed to process images with FAL AI',
-        details: error instanceof Error ? error.message : 'Unknown FAL AI error',
-        code: 'FAL_ERROR',
-        retryable: true,
-        httpStatus: 500
+        type: errorType,
+        title: errorTitle,
+        message: errorMessage,
+        details: errorDetails,
+        code: errorCode,
+        retryable: retryable,
+        httpStatus: httpStatus
       }
     };
   }
