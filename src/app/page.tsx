@@ -1,4 +1,6 @@
 import Link from "next/link"
+
+import GeminiChat from "@/components/modules/gemini-chat"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -44,6 +46,8 @@ export default function Home() {
               </CardContent>
             </Card>
           </Link>
+
+          <GeminiChat />
         </div>
       </div>
     </div>
