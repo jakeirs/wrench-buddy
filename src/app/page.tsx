@@ -1,7 +1,13 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Library, Zap, Shuffle } from "lucide-react";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Edit, Library, Zap, Shuffle } from "lucide-react"
 
 export default function Home() {
   return (
@@ -9,7 +15,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-16 flex flex-col items-center justify-center min-h-screen text-center">
         <div className="mb-16">
           <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tight">
-            Nano Banana
+            Wrench Buddy
           </h1>
           <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto">
             AI-Powered Image Editor
@@ -20,63 +26,6 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl w-full">
-          <Link href="/editor">
-            <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
-              <CardHeader className="text-center pb-6">
-                <div className="mx-auto mb-4 p-4 rounded-full bg-gradient-to-r from-orange-400 to-red-500 group-hover:from-orange-500 group-hover:to-red-600 transition-colors">
-                  <Edit size={48} className="text-white" />
-                </div>
-                <CardTitle className="text-2xl font-bold">Editor</CardTitle>
-                <CardDescription className="text-white/80 text-lg">
-                  Upload and edit images with Fal AI
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white">
-                  Start Editing
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/editor-openrouter">
-            <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
-              <CardHeader className="text-center pb-6">
-                <div className="mx-auto mb-4 p-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:from-yellow-500 group-hover:to-orange-600 transition-colors">
-                  <Zap size={48} className="text-white" />
-                </div>
-                <CardTitle className="text-2xl font-bold">Editor OpenRouter (Free)</CardTitle>
-                <CardDescription className="text-white/80 text-lg">
-                  Chat with AI about your images for free
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white">
-                  Chat with AI
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/editor-mixer">
-            <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
-              <CardHeader className="text-center pb-6">
-                <div className="mx-auto mb-4 p-4 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-600 transition-colors">
-                  <Shuffle size={48} className="text-white" />
-                </div>
-                <CardTitle className="text-2xl font-bold">Editor Mixer</CardTitle>
-                <CardDescription className="text-white/80 text-lg">
-                  Process multiple images with different AI models
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white">
-                  Mix & Process
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-
           <Link href="/library">
             <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
               <CardHeader className="text-center pb-6">
@@ -98,5 +47,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }
