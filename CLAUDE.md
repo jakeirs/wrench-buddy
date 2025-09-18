@@ -7,6 +7,7 @@ Next.js 15.5.2 app with **React 19**, **TypeScript**, **Tailwind CSS 4**, and **
 - **Next.js**: 15.5.2 | **React**: 19.1.0 | **TypeScript**: 5+
 - **Tailwind CSS**: 4+ | **shadcn/ui**: New York style, neutral base
 - **Zustand**: 5.0.8 | **Lucide React**: 0.542.0 | **date-fns**: 4.1.0
+- **AI SDK**: Vercel AI SDK with Google Gemini integration | **@ai-sdk/google**: 2.0.14 | **@ai-sdk/react**: 2.0.46
 
 ## Path Alias System
 
@@ -379,6 +380,13 @@ npm run dev
 - Playwright tests configured for `http://localhost:3000`
 - Always ensure test configuration uses correct port
 - Never change to alternative ports unless absolutely necessary
+
+## **🤖 Gemini AI Integration**
+
+- **API Route**: `/api/gemini-chat` (POST) - sends `{ message: string }`, returns `{ response: string, success: boolean }`
+- **Component**: `@/components/modules/gemini-chat` - Simple test button on homepage
+- **Environment**: Requires `GOOGLE_GENERATIVE_AI_API_KEY` in `.env.local`
+- **Response**: Displays in browser console + alert notification, tested in `tests/gemini-chat.spec.ts`
 
 ## **Development Rules**
 
