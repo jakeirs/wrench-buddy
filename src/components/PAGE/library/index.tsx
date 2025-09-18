@@ -1,20 +1,28 @@
-'use client';
+"use client"
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react"
+import { MessageSquare } from "lucide-react"
 
-import LibraryGrid from '@/components/modules/library-grid';
-import Chat from '@/components/modules/chat';
-import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
-import { LibraryHeader, LibraryTitle, EmptyLibraryState, LoadingState } from './components';
+import LibraryGrid from "@/components/modules/library-grid"
+import Chat from "@/components/modules/chat"
+import { Sheet, CustomSheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
+import {
+  LibraryHeader,
+  LibraryTitle,
+  EmptyLibraryState,
+  LoadingState,
+} from "./components"
 
-import { mockChatMessages } from '@/lib/mock-chat-data';
+import { mockChatMessages } from "@/lib/mock-chat-data"
 
-import { LibraryPageProps } from './types';
+import { LibraryPageProps } from "./types"
 
-export default function LibraryPage({ className = '' }: LibraryPageProps) {
-  const [images, setImages] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [chatMessages, setChatMessages] = useState(mockChatMessages);
+export default function LibraryPage({ className = "" }: LibraryPageProps) {
+  const [images, setImages] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [chatMessages, setChatMessages] = useState(mockChatMessages)
+  const [isChatOpen, setIsChatOpen] = useState(true)
 
   const handleSendMessage = (message: string) => {
     const newMessage = {
@@ -22,55 +30,59 @@ export default function LibraryPage({ className = '' }: LibraryPageProps) {
       content: message,
       isFromUser: true,
       timestamp: new Date(),
-      sender: 'You'
-    };
-    setChatMessages(prev => [...prev, newMessage]);
-  };
+      sender: "You",
+    }
+    setChatMessages((prev) => [...prev, newMessage])
+  }
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+      setIsLoading(false)
+    }, 1000)
 
     // Test auto-scroll by adding a new message after 5 seconds
     const timer = setTimeout(() => {
-      setChatMessages(prev => [...prev, {
-        id: '5',
-        content: 'This is a new message to test auto-scroll functionality! 🚀',
-        isFromUser: false,
-        timestamp: new Date(),
-        sender: 'Alex'
-      }]);
-    }, 5000);
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          id: "5",
+          content:
+            "This is a new message to test auto-scroll functionality! 🚀",
+          isFromUser: false,
+          timestamp: new Date(),
+          sender: "Alex",
+        },
+      ])
+    }, 5000)
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 ${className}`}>
-      {/* Desktop Chat - Fixed left sidebar */}
-      <div className="hidden lg:block">
-        <Sheet open={true} modal={false}>
-          <SheetContent
-            side="left"
-            className="w-80 p-0 border-none fixed left-0 top-0 h-full z-50 [&>button]:hidden"
-          >
-            <SheetTitle className="sr-only">Chat</SheetTitle>
-            <Chat messages={chatMessages} onSendMessage={handleSendMessage} />
-          </SheetContent>
-        </Sheet>
-      </div>
+    <div
+      className={`min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 ${className}`}
+    >
+      {/* Chat Toggle Button - Only visible when Sheet is closed */}
+      {!isChatOpen && (
+        <Button
+          onClick={() => setIsChatOpen(true)}
+          className="fixed left-4 top-4 z-50 rounded-full w-12 h-12 p-0 bg-blue-600 hover:bg-blue-700"
+          size="sm"
+        >
+          <MessageSquare size={20} />
+        </Button>
+      )}
 
-      {/* Mobile Chat - Bottom drawer */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
-        <div className="h-32 bg-white border-t border-gray-200">
-          <div className="h-full overflow-y-auto">
-            <Chat messages={chatMessages} onSendMessage={handleSendMessage} className="h-full" />
-          </div>
-        </div>
-      </div>
+      <Sheet open={isChatOpen} onOpenChange={setIsChatOpen}>
+        <CustomSheetContent side="left" className="w-3xl max-w-none p-0">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Chat</SheetTitle>
+          </SheetHeader>
+          <Chat messages={chatMessages} onSendMessage={handleSendMessage} />
+        </CustomSheetContent>
+      </Sheet>
 
-      <div className="lg:ml-80 transition-all duration-300 container mx-auto px-4 py-8 pb-36 lg:pb-8">
+      <div className="container mx-auto px-4 py-8">
         <LibraryHeader />
 
         <div className="max-w-7xl mx-auto">
@@ -86,5 +98,5 @@ export default function LibraryPage({ className = '' }: LibraryPageProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

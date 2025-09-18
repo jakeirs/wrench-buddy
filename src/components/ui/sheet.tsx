@@ -127,11 +127,38 @@ function SheetDescription({
   )
 }
 
+// Custom SheetContent without overlay for persistent sidebars
+function CustomSheetContent({
+  side = "right",
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Content> & {
+  side?: "top" | "right" | "bottom" | "left"
+}) {
+  return (
+    <SheetPortal>
+      <SheetPrimitive.Content
+        className={cn(
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+          side === "left" &&
+            "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </SheetPrimitive.Content>
+    </SheetPortal>
+  );
+}
+
 export {
   Sheet,
   SheetTrigger,
   SheetClose,
   SheetContent,
+  CustomSheetContent,
   SheetHeader,
   SheetFooter,
   SheetTitle,
