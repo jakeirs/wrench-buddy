@@ -4,10 +4,9 @@ import { useEffect, useState } from "react"
 import { ArrowLeft, Images } from "lucide-react"
 import Link from "next/link"
 import LibraryGrid from "@/components/modules/library-grid"
-import { StoredImageData } from "@/types/image"
 
 export default function LibraryPage() {
-  const [images, setImages] = useState<StoredImageData[]>([])
+  const [images, setImages] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   return (
